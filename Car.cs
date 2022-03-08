@@ -49,9 +49,19 @@ public class Car
 
     public static void IncidentRandomizer()
     {
-        foreach (Car car in CarRacing.Racers)
+        try
         {
-            car.MakeObstacle();
+            foreach (Car car in CarRacing.Racers)
+            {
+                car.MakeObstacle();
+            }
+        }
+        catch (Exception)
+        {
+            foreach (Car car in CarRacing.Racers)
+            {
+                car.MakeObstacle();
+            }
         }
     }
 
@@ -81,7 +91,7 @@ public class Car
 
     public static void IncidentRandomizerTimer()
     {
-        _obstacleTimer = new System.Timers.Timer(2000);
+        _obstacleTimer = new System.Timers.Timer(30000);
         _obstacleTimer.Elapsed += IncidentEvent;
         _obstacleTimer.AutoReset = true;
         _obstacleTimer.Enabled = true;
@@ -89,12 +99,11 @@ public class Car
 
     private static void IncidentEvent(Object source, ElapsedEventArgs e)
     {
-        if (CarRacing.Winners.Count == 10)
+        if (CarRacing.Winners.Count == 10 || CarRacing.Racers.Count == 0)
         {
             _obstacleTimer.Enabled = false;
         }
         IncidentRandomizer();
     }
-
 
 }
