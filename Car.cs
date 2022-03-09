@@ -3,12 +3,13 @@ using System.Timers;
 
 public class Car
 {
+#pragma warning disable CS8604
 #pragma warning disable CS8622
     public string RegNum { get; set; }
     public string Name { get; set; }
     public double Speed { get; set; }
     System.Timers.Timer? _raceTimer;
-    static System.Timers.Timer? _obstacleTimer;
+    static System.Timers.Timer? _incidentTimer;
     static System.Timers.Timer? _statusTimer;
     public Car(string regNum, string name, double speed)
     {
@@ -40,6 +41,8 @@ public class Car
             CarRacing.Winners.Add(this);
             CarRacing.Racers.Remove(this);
             _raceTimer.Enabled = false;
+            _statusTimer.Enabled = false;
+            _incidentTimer.Enabled = false;
         }
         if (CarRacing.Winners.Count == 10)
         {
@@ -50,17 +53,17 @@ public class Car
 
     private static void IncidentRandomizer()
     {
-        Thread.Sleep(500);
+        Thread.Sleep(750);
         try
         {
-            foreach (Car car in CarRacing.Racers)
+            foreach (Car car in CarRacing.Racers.ToList())
             {
                 car.MakeObstacle();
             }
         }
         catch (Exception)
         {
-            foreach (Car car in CarRacing.Racers)
+            foreach (Car car in CarRacing.Racers.ToList())
             {
                 car.MakeObstacle();
             }
@@ -93,10 +96,10 @@ public class Car
 
     public static void IncidentRandomizerTimer()
     {
-        _obstacleTimer = new System.Timers.Timer(30000);
-        _obstacleTimer.Elapsed += IncidentEvent;
-        _obstacleTimer.AutoReset = true;
-        _obstacleTimer.Enabled = true;
+        _incidentTimer = new System.Timers.Timer(30000);
+        _incidentTimer.Elapsed += IncidentEvent;
+        _incidentTimer.AutoReset = true;
+        _incidentTimer.Enabled = true;
     }
 
     private static void IncidentEvent(object source, ElapsedEventArgs e)
@@ -104,9 +107,9 @@ public class Car
         if (CarRacing.Winners.Count == 10 || CarRacing.Racers.Count == 0)
         {
 
-            _obstacleTimer.Enabled = false;
+            _incidentTimer.Enabled = false;
             _statusTimer.Enabled = false;
-            _obstacleTimer.AutoReset = false;
+            _incidentTimer.AutoReset = false;
             _statusTimer.AutoReset = false;
 
         }
@@ -139,16 +142,18 @@ public class Car
         {
             Clear();
             WriteLine($"\n\n\t\t    Contesters Status\n\n\tCar Name\tCurrent Speed\tkm remaining\n");
-            foreach (Car car in CarRacing.Racers)
+            foreach (Car car in CarRacing.Racers.ToList())
             {
-                WriteLine($"\t{car.Name}\t\t{car.Speed}Km/h\t\t{(car.TimeToFinishLine / 60 / 60) * car.Speed:#.##}\n");
+                WriteLine($"\t{car.Name}\t\t{car.Speed}Km/h\t\t" +
+                    $"{(car.TimeToFinishLine / 60 / 60) * car.Speed:#.##}\n");
             }
         }
         catch (Exception)
         {
-            foreach (Car car in CarRacing.Racers)
+            foreach (Car car in CarRacing.Racers.ToList())
             {
-                WriteLine($"\t{car.Name}\t{car.Speed}Km/h\t{(car.TimeToFinishLine / 60 / 60) * car.Speed:#.##}\n");
+                WriteLine($"\t{car.Name}\t{car.Speed}Km/h\t" +
+                    $"{(car.TimeToFinishLine / 60 / 60) * car.Speed:#.##}\n");
             }
         }
     }
