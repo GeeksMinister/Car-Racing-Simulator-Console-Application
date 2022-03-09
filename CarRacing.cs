@@ -71,9 +71,30 @@ static class CarRacing
                 new Thread(car.RacingToFinishLineTimer).Start();
             });
         }
-        WriteLine("\n\t\t\t   !!  THE RACE HAS STARTED  !!\n\n");
-        CursorVisible = false;
-        Parallel.ForEach(ThreadList, car => car.Invoke());
-        Car.IncidentRandomizerTimer();
+        string answer = string.Empty;
+        while (answer != "YES" && answer != "NO")
+        {
+            Write("\n   Would like to get the status feed during the race ?\n\n" +
+                "Type in 'Yes' or 'No' : ");
+            answer = ReadLine().Trim().ToUpper();
+        }
+        if (answer == "YES")
+        {
+            Clear();
+            WriteLine("\n\t\t\t   !!  THE RACE HAS STARTED  !!\n\n");
+            CursorVisible = false;
+            Parallel.ForEach(ThreadList, car => car.Invoke());
+            Car.IncidentRandomizerTimer();
+            Car.PrintStatusTimer();
+        }
+        else if (answer == "NO")
+        {
+            Clear();
+            WriteLine("\n\t\t\t   !!  THE RACE HAS STARTED  !!\n\n");
+            CursorVisible = false;
+            Parallel.ForEach(ThreadList, car => car.Invoke());
+            Car.IncidentRandomizerTimer();
+        }
+        
     }
 }

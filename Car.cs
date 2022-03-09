@@ -9,13 +9,14 @@ public class Car
     public double Speed { get; set; }
     System.Timers.Timer? _raceTimer;
     static System.Timers.Timer? _obstacleTimer;
+    static System.Timers.Timer? _statusTimer;
     public Car(string regNum, string name, double speed)
     {
         RegNum = regNum;
         Name = name;
         Speed = speed;
     }
-    public double TimeToFinishLine;
+    public double TimeToFinishLine = 0;
     public void Start(double distance) => TimeToFinishLine = (distance / Speed) * 60 * 60;
 
     public void RacingToFinishLineTimer()
@@ -36,8 +37,8 @@ public class Car
         {
             WriteLine($"\n   ({Name})\tfinished on track: " +
                 $"[{Thread.CurrentThread.ManagedThreadId}]");
-            CarRacing.Racers.Remove(this);
             CarRacing.Winners.Add(this);
+            CarRacing.Racers.Remove(this);
             _raceTimer.Enabled = false;
         }
         if (CarRacing.Winners.Count == 10)
@@ -47,8 +48,9 @@ public class Car
         }
     }
 
-    public static void IncidentRandomizer()
+    private static void IncidentRandomizer()
     {
+        Thread.Sleep(500);
         try
         {
             foreach (Car car in CarRacing.Racers)
@@ -72,19 +74,19 @@ public class Car
         {
             case <= 2:                     // 2%
                 TimeToFinishLine += 30;
-                WriteLine($"\n\t({Name})\t is -stopping for refueling-");
+                WriteLine($"\n\t\t({Name})\t is -stopping for refueling-");
                 return;
             case <= 6:                     // 2 + 4 = 4%
                 TimeToFinishLine += 20;
-                WriteLine($"\n\t({Name})\t got -flat tire-");
+                WriteLine($"\n\t\t({Name})\t got -flat tire-");
                 return;
             case <= 16:                     // 2 + 4 + 10 = 10%
                 TimeToFinishLine += 10;
-                WriteLine($"\n\t({Name})\t got -hit by a bird-");
+                WriteLine($"\n\t\t({Name})\t got -hit by a bird-");
                 return;
             case <= 36:                     // 2 + 6 + 10 + 20 = 20%
                 Speed -= 1;
-                WriteLine($"\n\t({Name})\t is having an -engine failure- ");
+                WriteLine($"\n\t\t({Name})\t is having an -engine failure- ");
                 return;
         }
     }
@@ -97,13 +99,57 @@ public class Car
         _obstacleTimer.Enabled = true;
     }
 
-    private static void IncidentEvent(Object source, ElapsedEventArgs e)
+    private static void IncidentEvent(object source, ElapsedEventArgs e)
     {
         if (CarRacing.Winners.Count == 10 || CarRacing.Racers.Count == 0)
         {
+
             _obstacleTimer.Enabled = false;
+            _statusTimer.Enabled = false;
+            _obstacleTimer.AutoReset = false;
+            _statusTimer.AutoReset = false;
+
         }
         IncidentRandomizer();
     }
 
+    public static void PrintStatusTimer()
+    {
+        _statusTimer = new System.Timers.Timer(10000);
+        _statusTimer.Elapsed += StatusIvent;
+        _statusTimer.AutoReset = true;
+        _statusTimer.Enabled = true;
+    }
+
+    private static void StatusIvent(object source, ElapsedEventArgs e)
+    {
+        if (CarRacing.Winners.Count == 10 || CarRacing.Racers.Count == 0)
+        {
+
+            _statusTimer.Enabled = false;
+
+            return;
+        }
+        PrintStatus();
+    }
+
+    private static void PrintStatus()
+    {
+        try
+        {
+            Clear();
+            WriteLine($"\n\n\t\t    Contesters Status\n\n\tCar Name\tCurrent Speed\tkm remaining\n");
+            foreach (Car car in CarRacing.Racers)
+            {
+                WriteLine($"\t{car.Name}\t\t{car.Speed}Km/h\t\t{(car.TimeToFinishLine / 60 / 60) * car.Speed:#.##}\n");
+            }
+        }
+        catch (Exception)
+        {
+            foreach (Car car in CarRacing.Racers)
+            {
+                WriteLine($"\t{car.Name}\t{car.Speed}Km/h\t{(car.TimeToFinishLine / 60 / 60) * car.Speed:#.##}\n");
+            }
+        }
+    }
 }
