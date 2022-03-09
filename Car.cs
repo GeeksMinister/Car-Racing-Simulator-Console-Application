@@ -39,7 +39,10 @@ public class Car
             WriteLine($"\n   ({Name})\tfinished on track: " +
                 $"[{Thread.CurrentThread.ManagedThreadId}]");
             CarRacing.Winners.Add(this);
-            CarRacing.Racers.Remove(this);
+            if (CarRacing.Racers.Exists(car => car == this))
+            {
+                CarRacing.Racers.Remove(this);
+            }
             _raceTimer.Enabled = false;
             _statusTimer.Enabled = false;
             _incidentTimer.Enabled = false;
