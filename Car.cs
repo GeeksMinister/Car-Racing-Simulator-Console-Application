@@ -30,7 +30,8 @@ public class Car
 
     void CloserToFinishLineEvent(Object source, ElapsedEventArgs e)
     {
-        if (TimeToFinishLine > 0)
+
+        if (TimeToFinishLine >= 0.5)
         {
             TimeToFinishLine -= 0.5;
         }
@@ -42,8 +43,15 @@ public class Car
             {
                 if (CarRacing.Racers.ToList().Exists(car => car == this))
                 {
-                    CarRacing.Racers.Remove(this);
                     CarRacing.Winners.Add(this);
+                    if (!CarRacing.Racers.Remove(this))
+                    {
+                        
+                    }else if (!CarRacing.Racers.Remove(this))
+                    {
+                        CarRacing.Racers.Remove(this);
+                    }
+                    
                 }
             }
             catch (Exception)
@@ -54,6 +62,7 @@ public class Car
         }
         if (CarRacing.Winners.Count == 10)
         {
+            CarRacing.Racers.Clear();
             _statusTimer.Enabled = false;
             _incidentTimer.Enabled = false;
             CarRacing.ThreadList.Clear();
