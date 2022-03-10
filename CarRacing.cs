@@ -65,7 +65,7 @@ static class CarRacing
     {
         foreach (var car in Racers)
         {
-            car.Start(0.5);
+            car.Start(10);
             ThreadList.Add(() =>
             {
                 new Thread(car.RacingToFinishLineTimer).Start();
