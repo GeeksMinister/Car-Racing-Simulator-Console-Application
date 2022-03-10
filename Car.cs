@@ -38,17 +38,24 @@ public class Car
         {
             WriteLine($"\n   ({Name})\tfinished on track: " +
                 $"[{Thread.CurrentThread.ManagedThreadId}]");
-            CarRacing.Winners.Add(this);
-            if (CarRacing.Racers.Exists(car => car == this))
+            try
             {
-                CarRacing.Racers.Remove(this);
+                if (CarRacing.Racers.ToList().Exists(car => car == this))
+                {
+                    CarRacing.Racers.Remove(this);
+                    CarRacing.Winners.Add(this);
+                }
+            }
+            catch (Exception)
+            {
+
             }
             _raceTimer.Enabled = false;
-            _statusTimer.Enabled = false;
-            _incidentTimer.Enabled = false;
         }
         if (CarRacing.Winners.Count == 10)
         {
+            _statusTimer.Enabled = false;
+            _incidentTimer.Enabled = false;
             CarRacing.ThreadList.Clear();
             CarRacing.PrintWinners();
         }
@@ -66,10 +73,7 @@ public class Car
         }
         catch (Exception)
         {
-            foreach (Car car in CarRacing.Racers.ToList())
-            {
-                car.MakeObstacle();
-            }
+
         }
     }
 
@@ -109,12 +113,10 @@ public class Car
     {
         if (CarRacing.Winners.Count == 10 || CarRacing.Racers.Count == 0)
         {
-
             _incidentTimer.Enabled = false;
             _statusTimer.Enabled = false;
             _incidentTimer.AutoReset = false;
             _statusTimer.AutoReset = false;
-
         }
         IncidentRandomizer();
     }
@@ -131,19 +133,18 @@ public class Car
     {
         if (CarRacing.Winners.Count == 10 || CarRacing.Racers.Count == 0)
         {
-
             _statusTimer.Enabled = false;
-
             return;
         }
         PrintStatus();
     }
 
-    private static void PrintStatus()
+    public static void PrintStatus()
     {
         try
         {
             Clear();
+            WriteLine("\n\t\t\t   !!  THE RACE IS ON  !!\n\n");
             WriteLine($"\n\n\t\t    Contesters Status\n\n\tCar Name\tCurrent Speed\tkm remaining\n");
             foreach (Car car in CarRacing.Racers.ToList())
             {
@@ -153,11 +154,7 @@ public class Car
         }
         catch (Exception)
         {
-            foreach (Car car in CarRacing.Racers.ToList())
-            {
-                WriteLine($"\t{car.Name}\t{car.Speed}Km/h\t" +
-                    $"{(car.TimeToFinishLine / 60 / 60) * car.Speed:#.##}\n");
-            }
+
         }
     }
 }

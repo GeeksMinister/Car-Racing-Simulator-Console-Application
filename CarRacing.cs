@@ -81,16 +81,15 @@ static class CarRacing
         if (answer == "YES")
         {
             Clear();
-            WriteLine("\n\t\t\t   !!  THE RACE HAS STARTED  !!\n\n");
             CursorVisible = false;
             Parallel.ForEach(ThreadList, car => car.Invoke());
             Car.IncidentRandomizerTimer();
             Car.PrintStatusTimer();
+            Car.PrintStatus();
         }
         else if (answer == "NO")
         {
             Clear();
-            WriteLine("\n\t\t\t   !!  THE RACE HAS STARTED  !!\n\n");
             CursorVisible = false;
             Parallel.ForEach(ThreadList, car => car.Invoke());
             Car.IncidentRandomizerTimer();
