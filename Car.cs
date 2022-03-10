@@ -10,10 +10,10 @@ public class Car
     public double Speed { get; set; }
     public bool Assigned { get; set; } = false;
     private int _trackNum = 0;
-    System.Timers.Timer? _raceTimer;
-    static System.Timers.Timer? _checkWinnerTimer;
-    static System.Timers.Timer? _incidentTimer;
-    static System.Timers.Timer? _statusTimer;
+    System.Timers.Timer? _raceTimer = new System.Timers.Timer(1000);
+    static System.Timers.Timer? _checkWinnerTimer = new System.Timers.Timer(200);
+    static System.Timers.Timer? _incidentTimer = new System.Timers.Timer(30000);
+    static System.Timers.Timer? _statusTimer = new System.Timers.Timer(10000);
     public Car(string regNum, string name, double speed)
     {
         RegNum = regNum;
@@ -25,7 +25,6 @@ public class Car
 
     public void RacingToFinishLineTimer()
     {
-        _raceTimer = new System.Timers.Timer(1000);
         _raceTimer.Elapsed += RacingToFinishLineEvent;
         _raceTimer.AutoReset = true;
         _raceTimer.Enabled = true;
@@ -45,10 +44,6 @@ public class Car
         AssignTrack();
         if (CarRacing.Winners.Count == 10)
         {
-            _statusTimer.Enabled = false;
-            _incidentTimer.Enabled = false;
-            _checkWinnerTimer.Enabled = false;
-            _raceTimer.Enabled = false;
             CursorVisible = true;
         }
         if (TimeToFinishLine >= 1)
@@ -59,7 +54,6 @@ public class Car
 
     public static void MoveRacersToWinnersTimer()
     {
-        _checkWinnerTimer = new System.Timers.Timer(200);
         _checkWinnerTimer.Elapsed += MoveRacersToWinnersEvent;
         _checkWinnerTimer.AutoReset = true;
         _checkWinnerTimer.Enabled = true;
@@ -72,8 +66,8 @@ public class Car
             if (car.TimeToFinishLine < 1)
             {
                 CarRacing.Winners.Add(car);
-                WriteLine($"\n   ({car.Name})\tfinished on track: " +
-                $"[{car._trackNum}]");
+                WriteLine($"\n  * ({car.Name})\tfinished on track: " +
+                $"[{car._trackNum}] *");
                 CarRacing.Racers.Remove(car);
             }
         }
@@ -99,6 +93,7 @@ public class Car
             {
                 car.MakeObstacle();
             }
+            WriteLine("\t____________________________________________________________");
         }
         catch (Exception)
         {
@@ -132,7 +127,6 @@ public class Car
 
     public static void IncidentRandomizerTimer()
     {
-        _incidentTimer = new System.Timers.Timer(30000);
         _incidentTimer.Elapsed += IncidentEvent;
         _incidentTimer.AutoReset = true;
         _incidentTimer.Enabled = true;
@@ -140,19 +134,11 @@ public class Car
 
     private static void IncidentEvent(object source, ElapsedEventArgs e)
     {
-        if (CarRacing.Winners.Count == 10 || CarRacing.Racers.Count == 0)
-        {
-            _incidentTimer.Enabled = false;
-            _statusTimer.Enabled = false;
-            _incidentTimer.AutoReset = false;
-            _statusTimer.AutoReset = false;
-        }
         IncidentRandomizer();
     }
 
     public static void PrintStatusTimer()
     {
-        _statusTimer = new System.Timers.Timer(10000);
         _statusTimer.Elapsed += StatusIvent;
         _statusTimer.AutoReset = true;
         _statusTimer.Enabled = true;
@@ -160,11 +146,6 @@ public class Car
 
     private static void StatusIvent(object source, ElapsedEventArgs e)
     {
-        if (CarRacing.Winners.Count == 10 || CarRacing.Racers.Count == 0)
-        {
-            _statusTimer.Enabled = false;
-            return;
-        }
         PrintStatus();
     }
 
@@ -181,6 +162,7 @@ public class Car
                 WriteLine($"\t\t\t{car.Name}\t\t{car.Speed}Km/h\t\t" +
                     $"{(car.TimeToFinishLine / 60 / 60) * car.Speed:#.##}\n");
             }
+            Write("\t\t_________________________________________________\n");
         }
         catch (Exception)
         {

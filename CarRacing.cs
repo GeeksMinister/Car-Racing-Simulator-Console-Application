@@ -95,6 +95,7 @@ static class CarRacing
             Parallel.ForEach(ThreadList, car => car.Invoke());
             Car.IncidentRandomizerTimer();
             Car.MoveRacersToWinnersTimer();
+            WriteLine("\n\t\t\t\t!!  THE RACE IS ON  !!\n");
         }
         
     }
