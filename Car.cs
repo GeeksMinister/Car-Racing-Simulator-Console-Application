@@ -83,6 +83,7 @@ public class Car
             _incidentTimer.Enabled = false;
             _checkWinnerTimer.Enabled = false;
             CarRacing.Racers.Clear();
+            CarRacing.ThreadList.Clear();
             Thread.Sleep(1000);
             CursorVisible = true;
             CarRacing.PrintWinners();
