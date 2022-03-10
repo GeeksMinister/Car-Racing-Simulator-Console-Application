@@ -174,8 +174,8 @@ public class Car
         {
             Clear();
             CursorVisible = false;
-            WriteLine("\n\t\t\t\t!!  THE RACE IS ON  !!\n\n");
-            WriteLine($"\n\n\t\t\t\t   --Race Status--\n\n\t\t\tCar Name\tCurrent Speed\tkm remaining\n");
+            WriteLine("\n\t\t\t\t!!  THE RACE IS ON  !!\n");
+            WriteLine($"\n\n\t\t\t\t   --Race Status--\n\n\n\t\t\tCar Name\tCurrent Speed\tkm remaining\n");
             foreach (Car car in CarRacing.Racers.ToList())
             {
                 WriteLine($"\t\t\t{car.Name}\t\t{car.Speed}Km/h\t\t" +
