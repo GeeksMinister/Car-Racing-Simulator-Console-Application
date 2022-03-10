@@ -65,7 +65,7 @@ static class CarRacing
     {
         foreach (var car in Racers)
         {
-            car.Start(10);
+            car.Start(0.5);
             ThreadList.Add(() =>
             {
                 new Thread(car.RacingToFinishLineTimer).Start();
@@ -83,6 +83,7 @@ static class CarRacing
             Clear();
             CursorVisible = false;
             Parallel.ForEach(ThreadList, car => car.Invoke());
+            Car.MoveRacersToWinnersTimer();
             Car.IncidentRandomizerTimer();
             Car.PrintStatusTimer();
             Car.PrintStatus();
@@ -93,6 +94,7 @@ static class CarRacing
             CursorVisible = false;
             Parallel.ForEach(ThreadList, car => car.Invoke());
             Car.IncidentRandomizerTimer();
+            Car.MoveRacersToWinnersTimer();
         }
         
     }
