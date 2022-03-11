@@ -71,6 +71,12 @@ static class CarRacing
                 new Thread(car.RacingToFinishLineTimer).Start();
             });
         }
+        ChooseRaceScreen();
+
+    }
+
+    private static void ChooseRaceScreen()
+    {
         string answer = string.Empty;
         while (answer != "YES" && answer != "NO")
         {
@@ -97,6 +103,5 @@ static class CarRacing
             Car.MoveRacersToWinnersTimer();
             WriteLine("\n\t\t\t\t!!  THE RACE IS ON  !!\n");
         }
-        
     }
 }

@@ -61,6 +61,7 @@ public class Car
 
     private static void MoveRacersToWinnersEvent(Object source, ElapsedEventArgs e)
     {
+        CheckRaceIfOver();
         foreach (Car car in CarRacing.Racers.ToList())
         {
             if (car.TimeToFinishLine < 1)
@@ -71,6 +72,10 @@ public class Car
                 CarRacing.Racers.Remove(car);
             }
         }
+    }
+
+    private static void CheckRaceIfOver()
+    {
         if (CarRacing.Winners.Count == 10)
         {
             _statusTimer.Enabled = false;
