@@ -61,20 +61,22 @@ public class Car
 
     private static void MoveRacersToWinnersEvent(Object source, ElapsedEventArgs e)
     {
-        CheckRaceIfOver();
-        foreach (Car car in CarRacing.Racers.ToList())
+        if (!CheckRaceIfOver())
         {
-            if (car.TimeToFinishLine < 1)
+            foreach (Car car in CarRacing.Racers.ToList())
             {
-                CarRacing.Winners.Add(car);
-                WriteLine($"\n  * ({car.Name})\tfinished on track: " +
-                $"[{car._trackNum}] *");
-                CarRacing.Racers.Remove(car);
+                if (car.TimeToFinishLine < 1)
+                {
+                    CarRacing.Winners.Add(car);
+                    WriteLine($"\n  * ({car.Name})\tfinished on track: " +
+                    $"[{car._trackNum}] *");
+                    CarRacing.Racers.Remove(car);
+                }
             }
         }
     }
 
-    private static void CheckRaceIfOver()
+    private static bool CheckRaceIfOver()
     {
         if (CarRacing.Winners.Count == 10)
         {
@@ -86,7 +88,9 @@ public class Car
             Thread.Sleep(1000);
             CursorVisible = true;
             CarRacing.PrintWinners();
+            return true;
         }
+        return false;
     }
 
     private static void IncidentRandomizer()
