@@ -51,7 +51,7 @@ static class CarRacing
         Winners.Clear();
         WriteLine("\n\n\t\tPress 'Enter' to repeat the race");
         ReadLine();
-        StartRace(); 
+        StartRace();
     }
 
     public static void StartRace()
@@ -71,6 +71,12 @@ static class CarRacing
                 new Thread(car.RacingToFinishLineTimer).Start();
             });
         }
+        ChooseRaceScreen();
+
+    }
+
+    private static void ChooseRaceScreen()
+    {
         string answer = string.Empty;
         while (answer != "YES" && answer != "NO")
         {
@@ -81,20 +87,21 @@ static class CarRacing
         if (answer == "YES")
         {
             Clear();
-            WriteLine("\n\t\t\t   !!  THE RACE HAS STARTED  !!\n\n");
             CursorVisible = false;
             Parallel.ForEach(ThreadList, car => car.Invoke());
+            Car.MoveRacersToWinnersTimer();
             Car.IncidentRandomizerTimer();
             Car.PrintStatusTimer();
+            Car.PrintStatus();
         }
         else if (answer == "NO")
         {
             Clear();
-            WriteLine("\n\t\t\t   !!  THE RACE HAS STARTED  !!\n\n");
             CursorVisible = false;
             Parallel.ForEach(ThreadList, car => car.Invoke());
             Car.IncidentRandomizerTimer();
+            Car.MoveRacersToWinnersTimer();
+            WriteLine("\n\t\t\t\t!!  THE RACE IS ON  !!\n");
         }
-        
     }
 }
